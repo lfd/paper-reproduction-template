@@ -1,0 +1,20 @@
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: paper_repro
+    logging:
+      driver: "none"
+    volumes:
+      - ..:/workspace
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+
+  repro:
+    image: paper_repro
+    volumes:
+      - ..:/workspace
+    working_dir: /workspace
+    command: make repro

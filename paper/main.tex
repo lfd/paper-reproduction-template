@@ -1,0 +1,110 @@
+\documentclass[10pt,conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xspace}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,urlcolor=teal,
+            linkcolor=teal,citecolor=teal]{hyperref}\usepackage{cleveref}
+\usepackage{balance}
+\usepackage{enumitem}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{csquotes}
+\usepackage{glossaries-extra}
+\usepackage{tikz}
+\usetikzlibrary{patterns,decorations.pathmorphing,calc,positioning}
+\setabbreviationstyle[acronym]{long-short}
+\glssetcategoryattribute{acronym}{nohyperfirst}{true}
+\renewcommand*{\glsdonohyperlink}[2]{%
+{\glsxtrprotectlinks \glsdohypertarget{#1}{#2}}}
+
+\newacronym{zne}{ZNE}{Zero-Noise Extrapolation}
+
+\usepackage{censor}
+\newboolean{anonymous}
+\setboolean{anonymous}{false}
+\ifbool{anonymous}{}{\renewcommand{\censor}[1]{#1}}
+\ifbool{anonymous}{}{\renewcommand{\blackout}[1]{#1}}
+\ifbool{anonymous}{\newcommand{\genemail}[2]{\href{mailto:xxx.xxx@xx.xx}{\blackout{#2}}}}{\newcommand{\genemail}[2]{\href{#1}{#2}}}
+
+\newcommand{\repro}{\href{link_to_reproduction_package}{reproduction package\xspace}}
+
+\newcommand{\yes}{\checkmark}
+\newcommand{\partiall}{$\triangle$}
+\newcommand{\no}{$\times$}
+\newcommand{\na}{\textcolor{gray}{n/a}}
+
+\newcommand{\etal}{\emph{et al.}\xspace}
+\newcommand{\eg}{\emph{e.g.}\xspace}
+\newcommand{\ie}{\emph{i.e.}\xspace}
+
+\newcommand{\TBD}[1]{\textcolor{red}{#1}}
+
+\newcommand{\includetikz}[2][]{%
+  \IfFileExists{build/plots/#2.tex}{%
+    \input{build/plots/#2.tex}%
+  }{%
+    \includegraphics[#1]{paper/plots_precompiled/#2}%
+  }%
+}%
+
+\begin{document}
+
+\bstctlcite{BSTcontrol}
+
+\title{Paper Reproduction Template}
+
+\author{
+    \IEEEauthorblockN{\blackout{author 1}}
+    \IEEEauthorblockA{
+        \blackout{\textit{Technical University of}} \\
+        \blackout{\textit{Applied Science Regensburg}} \\
+        \blackout{Regensburg, Germany} \\
+        \genemail{mailto:name@othr.de}{name@othr.de}
+    }
+    \and
+    \IEEEauthorblockN{\blackout{author 2}}
+    \IEEEauthorblockA{
+        \blackout{\textit{Technical University of}} \\
+        \blackout{\textit{Applied Science Regensburg}} \\
+        \blackout{\textit{Siemens AG, Foundational Technology}} \\
+        \blackout{Regensburg/Munich, Germany} \\
+        \genemail{mailto:name@othr.de}{name@othr.de}
+    }
+}
+
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\begin{IEEEkeywords}
+zero-noise extrapolation, quantum error mitigation, benchmarking, validation,
+reproducibility, falsification, NISQ
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:intro}
+
+This is a template for reproducing a paper. For a working pipeline, there is atleast for citation necessary \cite{mauerer_repro_2022}
+
+\begin{figure}[t]
+  \centering
+  \includetikz[width=\columnwidth]{horoscope_sweep}
+  \caption{Richardson extrapolation test image.}
+  \label{fig:horoscope}
+\end{figure}
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
