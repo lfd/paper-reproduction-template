@@ -229,7 +229,7 @@ hardware pipeline can be tested without credentials or queue time.
 ## Adapting this template for a new paper
 
 Start from a copy of the repository – via GitHub's *Use this template* button,
-`gh repo create my-paper --template <owner>/paper-reproduction-template`, or a
+`gh repo create my-paper --template lfd/paper-reproduction-template`, or a
 plain clone – then:
 
 1. **Rename** the job: set `JOB` in the `Makefile` (it names the output PDF).

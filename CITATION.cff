@@ -12,7 +12,7 @@ authors:
     affiliation: >-
       Technical University of Applied Sciences Regensburg (OTH Regensburg)
 license: MIT
-repository-code: 'https://github.com/YOUR-ORG/paper-reproduction-template'
+repository-code: 'https://github.com/lfd/paper-reproduction-template'
 abstract: >-
   A self-contained project template for reproducible papers: a Makefile-driven
   pipeline from experiment scripts through generated data and figures to a

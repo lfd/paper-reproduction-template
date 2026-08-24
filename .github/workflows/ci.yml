@@ -5,7 +5,7 @@ name: reproduce
 # experiment on every push.
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
   workflow_dispatch:
 
