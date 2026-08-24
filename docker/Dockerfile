@@ -18,9 +18,11 @@ RUN apt-get update && \
         r-base-dev \
         sudo \
         texlive-base \
+        texlive-fonts-recommended \
         texlive-latex-extra \
         texlive-luatex \
         texlive-pictures \
+        texlive-plain-generic \
         texlive-publishers \
     && rm -rf /var/lib/apt/lists/*
 

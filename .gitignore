@@ -1,5 +1,7 @@
+# Build artefacts – everything under build/ is regenerable
 build/
-.venv/
+
+# LaTeX intermediates (when compiling outside build/)
 *.aux
 *.bbl
 *.blg
@@ -8,7 +10,20 @@ build/
 *.log
 *.out
 *.synctex.gz
+
+# Python
+.venv/
 __pycache__/
 *.pyc
+
+# Credentials – never commit
 .env
-reproduction/logs/
+
+# Hardware run logs (keep the directory, not its contents)
+reproduction/logs/*
+!reproduction/logs/.gitkeep
+
+# Nix / direnv
+.direnv/
+result
+result-*

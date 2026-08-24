@@ -1,14 +1,32 @@
+# =====================================================================
+#  Paper reproduction package – top-level build
+#
+#  make            build the paper PDF        → build/paper/$(JOB).pdf
+#  make reproduce  re-run experiments + plots → build/results, build/plots
+#  make check      verify a fresh run against the committed reference
+#  make help       list all targets
+#
+#  Rename the paper by setting JOB (or `make JOB=my_paper`).
+# =====================================================================
 OUTPUT = build
-# name of the job and resulting PDF
-JOB = paper_template
-.PHONY: all clean repro plots compile_plots
+JOB    = paper_template
+
+.PHONY: all help clean repro reproduce repro_docker dev plots compile_plots \
+        check hardware fallback
 
 # Programs and paths
 COMPOSE = docker/docker-compose.yml
 DC      = docker compose
-# Auto-use .venv if present (created by: python -m venv .venv && pip install -r reproduction/requirements.txt)
-VENV_PY := $(wildcard .venv/bin/python)
-PY      := $(if $(VENV_PY),.venv/bin/python,python3)
+# Auto-use ./.venv when it exists *and has the dependencies installed*
+# (create it with: python -m venv .venv &&
+#  .venv/bin/pip install -r reproduction/requirements.txt).
+# The import probe matters inside containers and Nix shells, where a venv
+# built for a different interpreter may be visible but unusable.
+# Override with `make PY=/path/to/python`.
+VENV_PY := $(shell [ -x .venv/bin/python ] && \
+                   .venv/bin/python -c 'import numpy' >/dev/null 2>&1 && \
+                   echo .venv/bin/python)
+PY      ?= $(if $(VENV_PY),$(VENV_PY),python3)
 R       = R_LIBS_USER=$(HOME)/R/library Rscript
 
 # Directories
@@ -25,26 +43,38 @@ OUTDIRS = $(D_RESULTS) $(D_PLOTS) $(D_PAPER)
 
 # ------------------------------------------------------------------ #
 # Paper dependencies                                                 #
-# Add generated .tex plot targets to RAW_PLOTS as the paper grows.   #
+# One entry per generated figure; see "Adding a figure" in README.md. #
 # ------------------------------------------------------------------ #
-RAW_PLOTS = horoscope_sweep
+RAW_PLOTS = example_zne
 PLOTS     = $(addprefix $(D_PLOTS)/,$(addsuffix .tex,$(RAW_PLOTS)))
 
-HOROSCOPE_RESULTS = $(D_RESULTS)/horoscope_circuits.csv \
-                    $(D_RESULTS)/horoscope_shots.csv \
-                    $(D_RESULTS)/horoscope_spectrum.csv \
-                    $(D_RESULTS)/horoscope_sweep.csv
+EXAMPLE_RESULTS = $(D_RESULTS)/example_zne.csv \
+                  $(D_RESULTS)/example_zne_summary.csv
 
 # ------------------------------------------------------------------ #
 # Top-level rules                                                    #
 # ------------------------------------------------------------------ #
 # NOTE: the paper PDF depends only on main.tex (figures are inlined via
 # \includetikz, falling back to paper/plots_precompiled/ when build/plots/
-# is absent).  Regenerate figures/data explicitly with `make repro`.
+# is absent).  Regenerate figures/data explicitly with `make reproduce`.
 all: $(D_PAPER)/$(JOB).pdf
+
+help:
+	@printf 'Targets:\n'
+	@printf '  %-14s %s\n' \
+	  all            'compile the paper PDF (default)' \
+	  reproduce      'run experiments, then build all figures' \
+	  plots          'rebuild figures from existing CSVs' \
+	  check          'compare a fresh run against data/reference/' \
+	  repro_docker   'run `make reproduce` inside the Docker image' \
+	  dev            'interactive shell in the Docker image' \
+	  hardware       'run the experiment on hardware (BACKEND=ibm|mqss|local)' \
+	  clean          'delete build/'
+	@printf '\nEnvironments: local venv, `docker compose`, or `nix develop`.\n'
 
 $(D_PAPER)/$(JOB).pdf: paper/main.tex | $(OUTDIRS)
 	BIBINPUTS=paper:$$BIBINPUTS latexmk -shell-escape -lualatex \
+	    -interaction=nonstopmode \
 	    -output-directory=$(D_PAPER) -jobname=$(JOB) $<
 
 dev: $(COMPOSE)
@@ -53,10 +83,13 @@ dev: $(COMPOSE)
 repro_docker: $(COMPOSE)
 	$(DC) -f $^ build
 	$(DC) -f $^ run --rm repro
-	make
+	$(MAKE) all
 
-repro: plots
+# `reproduce` is the canonical name; `repro` is kept as a short alias.
+reproduce: plots
 	@echo "Reproduction up to date!"
+
+repro: reproduce
 
 $(OUTDIRS):
 	mkdir -p $@
@@ -69,26 +102,46 @@ compile_plots: $(PLOTS) | $(D_PLOTS)
 	fi
 
 # ------------------------------------------------------------------ #
-# Layer-3 (Horoscope Effect) experiment + figure                       #
+# Example experiment + figure (replace with your own)                #
 # ------------------------------------------------------------------ #
-# Simulator sweep (Grover / QFT mirror / Trotter): produces all four CSVs.
-$(HOROSCOPE_RESULTS) &: $(D_SCRIPTS)/horoscope_mechanism.py | $(OUTDIRS)
-	$(PY) $< --backend simulator --outdir $(D_RESULTS)
+# Simulation: ZNE on a small circuit under depolarising noise.
+$(EXAMPLE_RESULTS) &: $(D_SCRIPTS)/example_zne.py \
+                      $(D_REPRODUCTION)/core/*.py | $(OUTDIRS)
+	$(PY) $< --outdir $(D_RESULTS)
 
-# Main Layer-3 figure: E(lambda) retention taxonomy + garbage Grover +
-# real EQE1 hardware point (data/qexa_hardware.csv).
-$(D_PLOTS)/horoscope_sweep.tex &: $(D_R)/plot_horoscope_extrapolation.R \
-                                  $(HOROSCOPE_RESULTS) \
-                                  $(D_DATA)/qexa_hardware.csv | $(OUTDIRS)
+# Figure: E(lambda) curves + extrapolation, drawn from the CSVs above.
+$(D_PLOTS)/example_zne.tex: $(D_R)/plot_example_zne.R \
+                            $(D_R)/config.R \
+                            $(EXAMPLE_RESULTS) | $(OUTDIRS)
 	$(R) $<
 
+# Regenerate the committed fallback PDF (used when build/plots/ is absent).
+fallback: $(EXAMPLE_RESULTS)
+	$(PY) $(D_SCRIPTS)/make_fallback.py
+
 # ------------------------------------------------------------------ #
-# Optional: garbage-folding falsification on real hardware (EQE1).      #
-# Requires MQSS_TOKEN; not part of the default `repro` target.          #
+# Reproducibility check: fresh run vs. committed reference results   #
 # ------------------------------------------------------------------ #
-hardware_qexa: | $(OUTDIRS)
-	$(PY) $(D_REPRODUCTION)/hardware/horoscope_qexa.py --reps 30 --shots 4096 \
+check: $(EXAMPLE_RESULTS)
+	$(PY) $(D_SCRIPTS)/check_results.py \
+	    --reference $(D_DATA)/reference \
+	    --results $(D_RESULTS)
+
+# ------------------------------------------------------------------ #
+# Optional: run the experiment on real hardware.                      #
+# Not part of `reproduce`: needs credentials (reproduction/.env) and   #
+# queue time.  BACKEND=local runs the same code path on a simulator.  #
+#   make hardware                  (simulator smoke test)             #
+#   make hardware BACKEND=ibm      (real device)                      #
+# ------------------------------------------------------------------ #
+BACKEND ?= local
+HW_REPS ?= 10
+HW_SHOTS ?= 4096
+
+hardware: | $(OUTDIRS)
+	$(PY) $(D_REPRODUCTION)/hardware/run_hardware.py \
+	    --backend $(BACKEND) --reps $(HW_REPS) --shots $(HW_SHOTS) \
 	    --outdir $(D_RESULTS)
 
 clean:
-	rm -rf build
+	rm -rf $(OUTPUT)
