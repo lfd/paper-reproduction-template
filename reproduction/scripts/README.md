@@ -1,33 +1,34 @@
-# Reproduction Scripts
+# Simulation scripts
 
-## Simulation (no credentials required)
+Scripts that produce the paper's numbers.  Each one writes CSV files to
+`build/results/` and takes an `--outdir` so it can be run outside `make`.
 
-- `horoscope_mechanism.py` — garbage-folding falsification in simulation
-  (Grover / QFT mirror / Trotter). Produces `horoscope_circuits.csv`,
-  `horoscope_spectrum.csv`, `horoscope_sweep.csv`, `horoscope_shots.csv`.
-- `make_horoscope_fallback.py` — renders a matplotlib preview of the main
-  figure to `paper/plots_precompiled/horoscope_sweep.pdf` (local fallback used
-  when the canonical R/tikz figure has not been built).
+- `example_zne.py` – the template's worked example: zero-noise extrapolation
+  of a small Rx+ZZ circuit under depolarising noise.  Deterministic
+  (`--seed`), runs in seconds, needs no credentials.
+- `check_results.py` – compares a fresh run against the committed reference
+  CSVs in `../data/reference/` (`make check`).
+- `make_fallback.py` – renders the matplotlib fallback figure into
+  `paper/plots_precompiled/`, so the paper also compiles without R.
 
-## Hardware (`../hardware/`)
-
-- `horoscope_qexa.py` — garbage-folding falsification on the IQM Euro-Q-Exa
-  machine (`EQE1`) via the MQSS adapter. Requires `MQSS_TOKEN` (see
-  `../.env.example`). Crash-resumable; supports `--local-test` for a local
-  Aer smoke test.
+Hardware scripts live in `../hardware/`; shared code lives in `../core/`.
 
 ## Usage
 
 ```bash
-# Full simulation reproduction + figure (canonical figure needs R + tikzDevice):
-make repro
-
-# Or directly:
-python reproduction/scripts/horoscope_mechanism.py --backend simulator --outdir build/results
-
-# Hardware falsification on EQE1 (deploy in tmux; never commit your token):
-MQSS_TOKEN=... python reproduction/hardware/horoscope_qexa.py --reps 30 --shots 4096
-
-# Local smoke test of the hardware script (no credentials):
-python reproduction/hardware/horoscope_qexa.py --local-test
+make reproduce                     # everything: results + figures
+python reproduction/scripts/example_zne.py --outdir build/results
+python reproduction/scripts/example_zne.py --noise thermal_relaxation --reps 200
+make check                         # results still match the reference?
 ```
+
+## Conventions worth keeping
+
+- **Seed everything** that draws random numbers, and expose the seed on the
+  command line.
+- **Write CSV, not plots.** Plotting is R's job (`../R/`); a script that
+  emits data can be re-analysed without re-running the experiment.
+- **One row per observation** in the raw CSV, aggregates in a separate
+  `*_summary.csv`.  Reviewers ask for the raw rows.
+- **Print what you did** (parameters, intermediate values) so a log of the
+  run is a record of the run.

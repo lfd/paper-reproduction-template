@@ -1,21 +1,16 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# Shared Configuration — LfD Colour Scheme, Packages, Theme & TikZ Export
+# Shared configuration – palette, packages, ggplot theme & TikZ export
 # =============================================================================
-# Source this from every plotting script:
-#   .script_dir <- tryCatch(dirname(sys.frame(1)$ofile), error = function(e) {
-#     args <- commandArgs(trailingOnly = FALSE)
-#     m <- grep("^--file=", args, value = TRUE)
-#     if (length(m)) dirname(normalizePath(sub("^--file=", "", m))) else "R"
-#   })
-#   source(file.path(.script_dir, "config.R"))
+# Scripts are run from the project root (by `make plots`), so they source it as:
+#   source("./reproduction/R/config.R")
 # =============================================================================
 
 # ── Packages ──
 library(tidyverse)
 library(scales)
 if (!require(patchwork, quietly = TRUE)) {
-  message("patchwork not installed — multi-panel plots will be skipped")
+  message("patchwork not installed – multi-panel plots will be skipped")
 }
 library(tikzDevice)
 options(tikzDefaultEngine = "luatex",
@@ -36,13 +31,10 @@ SYM.SIZE <- 1.2 ## Symol size in legends
 LINE.SIZE <- 1
 POINT.SIZE <- 0.5
 
-# ── Output directories ──
-COLOURS.LIST <- c("black", "#E69F00", "#999999", "#009371", "#ed665a", "#1f78b4", "#009371", "#beaed4")
-
 results_dir <- "./build/results"
 
-# ── LfD Colour Scheme ──
-LFD <- list(
+# ── Colour palette (colour-blind-safe; replace with your group's scheme) ──
+PALETTE <- list(
   black  = "#000000",
   orange = "#E69F00",
   grey   = "#999999",
@@ -51,8 +43,8 @@ LFD <- list(
   blue   = "#1F78B4",
   purple = "#BEAED4"
 )
-COLOURS.LIST <- c(LFD$black, LFD$orange, LFD$grey, LFD$teal,
-                  LFD$red, LFD$blue, LFD$purple)
+COLOURS.LIST <- c(PALETTE$black, PALETTE$orange, PALETTE$grey, PALETTE$teal,
+                  PALETTE$red, PALETTE$blue, PALETTE$purple)
 
 # ── Paper-quality ggplot theme (matches IEEEtran styling) ──
 theme_paper <- function(base_size = BASE.SIZE) {
@@ -84,7 +76,7 @@ latex_percent <- function(x) paste0(x, "\\%")
 # ── Helper: save plot as TikZ (standalone PDFs compiled separately by `make compile_plots`) ──
 save_plot <- function(g, name, width = COLWIDTH, height = 0.7 * COLWIDTH) {
   dir <- 'build/plots/'
-  # PDF preview disabled — proper standalone PDFs are built from TikZ by `make compile_plots`
+  # PDF preview disabled – proper standalone PDFs are built from TikZ by `make compile_plots`
   # pdf(paste0(dir, name, ".pdf"), width = width, height = height)
   # print(g)
   # dev.off()

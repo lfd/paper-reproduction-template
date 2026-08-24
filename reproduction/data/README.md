@@ -1,15 +1,23 @@
 # Data
 
-Static input data committed to the repository — these files do **not** change
-during reproduction and are read-only inputs to the plotting scripts.
+Static, read-only inputs that are committed to the repository.  Anything a
+script *generates* belongs in `build/results/` (gitignored).
 
-## Files
+## Contents
 
-- `qexa_hardware.csv` — raw Euro-Q-Exa (EQE1) measurement results used as the
-  real-hardware data point in the extrapolation figure.
-- `qexa_drift/` — multi-day EQE1 drift measurements (raw per-session CSVs).
+- `reference/` – the CSVs a correct run of `make reproduce` must produce.
+  `make check` diffs a fresh run against them, which is how a reader can tell
+  reproduction from mere execution.  Refresh them deliberately (and say so in
+  the commit message) when a parameter or a bug fix changes the numbers:
 
-## Adding new data
+  ```bash
+  make reproduce && cp build/results/*.csv reproduction/data/reference/
+  ```
 
-Put raw, read-only input data here.  Generated/derived data goes under
-`build/results/` (produced by `make repro`, gitignored).
+## Adding data
+
+Put raw measurement data (hardware runs, digitised figures from other papers,
+calibration snapshots) here, one directory per source, and document its
+provenance – instrument, date, and how it was obtained – in this file.  Large
+binary data belongs in an archive (e.g. Zenodo) referenced from here, not in
+git.

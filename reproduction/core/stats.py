@@ -1,6 +1,6 @@
 """
-Statistical analysis helpers for QEM reproduction experiments.
-==============================================================
+Statistical analysis helpers.
+=============================
 
 All functions operate on paired raw / mitigated expectation-value
 arrays.  The key output is a dictionary compatible with CSV export.
@@ -56,7 +56,7 @@ def paired_analysis(
     try:
         w_stat, p_value_w = sp_stats.wilcoxon(improvement)
     except ValueError:
-        # All differences zero — no test possible
+        # All differences zero – no test possible
         w_stat, p_value_w = np.nan, np.nan
 
     # ── Cohen's d  (paired, on improvement) ──────────────────────────

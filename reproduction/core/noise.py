@@ -1,20 +1,19 @@
 """
-Noise-model factory for QEM reproduction experiments.
-====================================================
+Noise-model factory.
+====================
 
 Provides ``make_noise_model`` which creates a Qiskit-Aer ``NoiseModel``
 for three physically distinct noise channels:
 
-* **depolarizing** — symmetric Pauli channel; the de-facto standard in
-  most QEM simulation papers.
-* **amplitude_damping** — asymmetric channel modelling energy
+* **depolarizing** – symmetric Pauli channel; the de-facto standard in
+  most simulation papers.
+* **amplitude_damping** – asymmetric channel modelling energy
   relaxation (T₁ process); biases toward |0⟩.
-* **thermal_relaxation** — combined T₁ + T₂ process; the most
+* **thermal_relaxation** – combined T₁ + T₂ process; the most
   physically realistic of the three.
 
-The point of offering multiple models is to show that ZNE behaviour
-depends strongly on the *type* of noise, not only its rate — yet most
-papers only report "noise rate" without specifying the channel.
+Offering several channels makes the choice explicit: mitigation
+behaviour depends on the *type* of noise, not only on its rate.
 """
 
 from __future__ import annotations
