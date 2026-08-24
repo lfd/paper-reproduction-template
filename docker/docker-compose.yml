@@ -4,6 +4,16 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     image: paper_repro
+    # Run as the *host* user, so files written into the bind-mounted project
+    # (build/, figures, CSVs) belong to whoever started the container.  The
+    # image's own `repro` user is uid 1000; a CI runner or a workstation with a
+    # different uid could otherwise not write into the checkout at all.
+    # DOCKER_UID/DOCKER_GID are set by the Makefile (`id -u` / `id -g`).
+    user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
+    environment:
+      # An arbitrary uid has no passwd entry and therefore no writable home;
+      # R and LuaLaTeX need one for their caches.
+      HOME: /tmp
     logging:
       driver: "none"
     volumes:
@@ -17,6 +27,9 @@ services:
 
   repro:
     image: paper_repro
+    user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
+    environment:
+      HOME: /tmp
     volumes:
       - ..:/workspace
       - /workspace/.venv

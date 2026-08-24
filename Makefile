@@ -16,7 +16,9 @@ JOB    = paper_template
 
 # Programs and paths
 COMPOSE = docker/docker-compose.yml
-DC      = docker compose
+# Pass the host uid/gid through, so the container writes files as the current
+# user instead of the image's built-in uid 1000 (see docker-compose.yml).
+DC      = DOCKER_UID=$(shell id -u) DOCKER_GID=$(shell id -g) docker compose
 # Auto-use ./.venv when it exists *and has the dependencies installed*
 # (create it with: python -m venv .venv &&
 #  .venv/bin/pip install -r reproduction/requirements.txt).

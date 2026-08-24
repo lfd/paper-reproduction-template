@@ -106,6 +106,11 @@ make repro_docker    # build the image, run `make reproduce` inside it, compile 
 make dev             # interactive shell in the container
 ```
 
+The Makefile passes `DOCKER_UID`/`DOCKER_GID` (`id -u` / `id -g`) to Compose, so
+the container runs as *you* and generated files are not owned by a foreign uid.
+Calling `docker compose` directly without those variables falls back to uid
+1000, which cannot write into a checkout owned by anyone else.
+
 ### 3 – Nix (exploratory)
 
 `flake.nix` pins the compilers, system libraries and R packages as well, which
