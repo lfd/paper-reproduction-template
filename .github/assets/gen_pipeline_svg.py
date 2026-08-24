@@ -15,10 +15,10 @@ MONO = "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monos
 
 SRC, GEN, OUT, REF = "src", "gen", "out", "ref"
 BOX_H = 46
-CYCLE = 10.0   # loop length, matching gen_terminal_svg.py
+CYCLE = 15.0   # loop length, matching gen_terminal_svg.py
 
 parts = {"labels": [], "arrows": [], "nodes": []}
-anims = []
+anims, keyframes = [], []
 clock = [0.0]
 uid = [0]
 
@@ -29,14 +29,26 @@ def tick(inc):
     return d
 
 
+def pct(seconds):
+    """Position of *seconds* inside the loop, in percent of the cycle."""
+    return round(min(seconds, CYCLE) / CYCLE * 100, 2)
+
+
 def anim(dur, delay):
-    """Loop on the same CYCLE as the terminal cards, so all graphics on the
-    page restart together; `dur` only sets how fast a single element appears."""
+    """One keyframe set per element, expressed in percent of the cycle.
+
+    Using percentages rather than `animation-delay` matters: with a delay,
+    every element restarts its own cycle at its own time and merely blinks in
+    place.  Here all elements share one timeline, so the diagram clears at 0%
+    and is drawn again in order."""
     uid[0] += 1
-    anims.append(
-        f".a{uid[0]}{{animation:pop {CYCLE}s {delay}s ease infinite;}}"
+    name = f"a{uid[0]}"
+    p0, p1 = pct(delay), pct(delay + dur)
+    keyframes.append(
+        f"@keyframes show-{name}{{0%,{p0}%{{opacity:0;}}{p1}%,100%{{opacity:1;}}}}"
     )
-    return f"a{uid[0]}"
+    anims.append(f".{name}{{animation:show-{name} {CYCLE}s linear infinite;}}")
+    return name
 
 
 def box(x, y, w, flavour, name, where):
@@ -147,12 +159,12 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}"
 
     /* each element appears when the pipeline reaches it */
     .fx {{ opacity:0; }}
-    /* 3% of the {CYCLE:g}s cycle is the fade-in, the rest holds the finished
-       diagram, so the whole pipeline replays every {CYCLE:g} seconds.
-       Opacity only: animating `transform` pushes the group onto the
-       compositor, where it renders inconsistently once the SVG is embedded
-       as an image. */
-    @keyframes pop {{ 0%{{opacity:0;}} 3%,100%{{opacity:1;}} }}
+    /* Each element fades in when the pipeline reaches it and is then held
+       until the {CYCLE:g}s cycle restarts, which clears the diagram and draws
+       it again.  Opacity only: animating `transform` pushes the group onto
+       the compositor, where it renders inconsistently once the SVG is
+       embedded as an image. */
+    {chr(10).join("    " + k for k in keyframes).strip()}
     {chr(10).join("    " + a for a in anims).strip()}
   </style>
 

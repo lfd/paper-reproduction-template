@@ -29,30 +29,47 @@
 
     /* each element appears when the pipeline reaches it */
     .fx { opacity:0; }
-    /* 3% of the 10s cycle is the fade-in, the rest holds the finished
-       diagram, so the whole pipeline replays every 10 seconds.
-       Opacity only: animating `transform` pushes the group onto the
-       compositor, where it renders inconsistently once the SVG is embedded
-       as an image. */
-    @keyframes pop { 0%{opacity:0;} 3%,100%{opacity:1;} }
-    .a1{animation:pop 10.0s 0.0s ease infinite;}
-    .a2{animation:pop 10.0s 0.1s ease infinite;}
-    .a3{animation:pop 10.0s 0.44s ease infinite;}
-    .a4{animation:pop 10.0s 0.62s ease infinite;}
-    .a5{animation:pop 10.0s 0.96s ease infinite;}
-    .a6{animation:pop 10.0s 1.14s ease infinite;}
-    .a7{animation:pop 10.0s 1.48s ease infinite;}
-    .a8{animation:pop 10.0s 1.66s ease infinite;}
-    .a9{animation:pop 10.0s 2.0s ease infinite;}
-    .a10{animation:pop 10.0s 2.1s ease infinite;}
-    .a11{animation:pop 10.0s 2.44s ease infinite;}
-    .a12{animation:pop 10.0s 2.62s ease infinite;}
-    .a13{animation:pop 10.0s 2.96s ease infinite;}
-    .a14{animation:pop 10.0s 3.06s ease infinite;}
-    .a15{animation:pop 10.0s 3.16s ease infinite;}
-    .a16{animation:pop 10.0s 3.5s ease infinite;}
-    .a17{animation:pop 10.0s 3.68s ease infinite;}
-    .a18{animation:pop 10.0s 4.02s ease infinite;}
+    /* Each element fades in when the pipeline reaches it and is then held
+       until the 15s cycle restarts, which clears the diagram and draws
+       it again.  Opacity only: animating `transform` pushes the group onto
+       the compositor, where it renders inconsistently once the SVG is
+       embedded as an image. */
+    @keyframes show-a1{0%,0.0%{opacity:0;}2.0%,100%{opacity:1;}}
+    @keyframes show-a2{0%,0.67%{opacity:0;}2.67%,100%{opacity:1;}}
+    @keyframes show-a3{0%,2.93%{opacity:0;}4.6%,100%{opacity:1;}}
+    @keyframes show-a4{0%,4.13%{opacity:0;}6.13%,100%{opacity:1;}}
+    @keyframes show-a5{0%,6.4%{opacity:0;}8.07%,100%{opacity:1;}}
+    @keyframes show-a6{0%,7.6%{opacity:0;}9.6%,100%{opacity:1;}}
+    @keyframes show-a7{0%,9.87%{opacity:0;}11.53%,100%{opacity:1;}}
+    @keyframes show-a8{0%,11.07%{opacity:0;}13.07%,100%{opacity:1;}}
+    @keyframes show-a9{0%,13.33%{opacity:0;}15.33%,100%{opacity:1;}}
+    @keyframes show-a10{0%,14.0%{opacity:0;}16.0%,100%{opacity:1;}}
+    @keyframes show-a11{0%,16.27%{opacity:0;}17.93%,100%{opacity:1;}}
+    @keyframes show-a12{0%,17.47%{opacity:0;}19.47%,100%{opacity:1;}}
+    @keyframes show-a13{0%,19.73%{opacity:0;}21.73%,100%{opacity:1;}}
+    @keyframes show-a14{0%,20.4%{opacity:0;}22.4%,100%{opacity:1;}}
+    @keyframes show-a15{0%,21.07%{opacity:0;}23.07%,100%{opacity:1;}}
+    @keyframes show-a16{0%,23.33%{opacity:0;}25.0%,100%{opacity:1;}}
+    @keyframes show-a17{0%,24.53%{opacity:0;}26.53%,100%{opacity:1;}}
+    @keyframes show-a18{0%,26.8%{opacity:0;}28.8%,100%{opacity:1;}}
+    .a1{animation:show-a1 15.0s linear infinite;}
+    .a2{animation:show-a2 15.0s linear infinite;}
+    .a3{animation:show-a3 15.0s linear infinite;}
+    .a4{animation:show-a4 15.0s linear infinite;}
+    .a5{animation:show-a5 15.0s linear infinite;}
+    .a6{animation:show-a6 15.0s linear infinite;}
+    .a7{animation:show-a7 15.0s linear infinite;}
+    .a8{animation:show-a8 15.0s linear infinite;}
+    .a9{animation:show-a9 15.0s linear infinite;}
+    .a10{animation:show-a10 15.0s linear infinite;}
+    .a11{animation:show-a11 15.0s linear infinite;}
+    .a12{animation:show-a12 15.0s linear infinite;}
+    .a13{animation:show-a13 15.0s linear infinite;}
+    .a14{animation:show-a14 15.0s linear infinite;}
+    .a15{animation:show-a15 15.0s linear infinite;}
+    .a16{animation:show-a16 15.0s linear infinite;}
+    .a17{animation:show-a17 15.0s linear infinite;}
+    .a18{animation:show-a18 15.0s linear infinite;}
   </style>
 
   <rect class="card" x="20" y="16" width="740"
