@@ -12,11 +12,15 @@ camera-ready PDF, wired together by a single `Makefile`.
             and `make` writes build/paper/paper_template.pdf."/>
 </p>
 
-```bash
-make            # build the paper PDF          → build/paper/paper_template.pdf
-make reproduce  # re-run experiments + figures → build/results, build/plots
-make check      # do the fresh results match the committed reference?
-```
+<p align="center">
+  <img src=".github/assets/pipeline.svg" width="780"
+       alt="Pipeline: `make reproduce` turns reproduction/scripts/example_zne.py into
+            build/results/example_zne.csv, then into build/plots/example_zne.tex via R
+            and tikzDevice, then into build/plots/example_zne.pdf via gen_img.sh;
+            `make` turns paper/main.tex into build/paper/paper_template.pdf; `make check`
+            compares the fresh CSVs with reproduction/data/reference/*.csv."/>
+</p>
+
 
 It accompanies [*Works on My QPU: Reproducibility in Quantum Computing
 Research*](https://arxiv.org/abs/2607.08348) (IEEE QCE 2026) and implements the
@@ -84,7 +88,21 @@ build/                  All generated files – gitignored, safe to delete
 
 ## Quick start
 
-### 1 – Local (recommended for development)
+### 1 – Local
+
+<p align="center">
+  <img src=".github/assets/terminal.svg" width="660"
+       alt="Terminal session: `make reproduce` runs the experiment and writes
+            build/results/example_zne.csv and build/plots/example_zne.tex,
+            `make check` reports that all results match the committed reference,
+            and `make` writes build/paper/paper_template.pdf."/>
+</p>
+
+```bash
+make            # build the paper PDF          → build/paper/paper_template.pdf
+make reproduce  # re-run experiments + figures → build/results, build/plots
+make check      # do the fresh results match the committed reference?
+```
 
 **Prerequisites:** Python ≥ 3.11, R ≥ 4.4, a TeX Live installation with
 `lualatex` / `latexmk`, and the R packages listed below.
@@ -107,7 +125,14 @@ make reproduce
 make
 ```
 
-### 2 – Docker (no local R or TeX Live needed)
+### 2 – Docker
+
+<p align="center">
+  <img src=".github/assets/terminal_docker.svg" width="660"
+       alt="Terminal session: `make repro_docker` builds the paper_repro image,
+            runs `make reproduce` inside the container and compiles
+            build/paper/paper_template.pdf."/>
+</p>
 
 ```bash
 make repro_docker    # build the image, run `make reproduce` inside it, compile the PDF
@@ -124,6 +149,14 @@ Calling `docker compose` directly without those variables falls back to uid
 `flake.nix` pins the compilers, system libraries and R packages as well, which
 `requirements.txt` and Docker do not fully do. Python packages still come from
 `requirements.txt` into `./.venv`, created by the shell hook.
+
+<p align="center">
+  <img src=".github/assets/terminal_nix.svg" width="660"
+       alt="Terminal session: `nix develop` creates ./.venv, installs the pinned
+            Python requirements and reports the environment as ready; inside the
+            shell, `make reproduce && make` regenerates the results and compiles
+            build/paper/paper_template.pdf."/>
+</p>
 
 ```bash
 nix develop

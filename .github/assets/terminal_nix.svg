@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="660" height="298">
+  <style>
+    /* Terminal card: same look as the qml-essentials code graphic. */
+    body { padding: 22px; }
+
+    .container {
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 5px 5px 25px #111;
+      font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+      font-size: 14px;
+      line-height: 1.45;
+      color: #d4d4d4;
+      background: #272a35;
+    }
+
+    /* window controls */
+    .top { padding: 10px; }
+    .button-l,.button-m,.button-r { display:inline-block;width:12px;height:12px;
+                                    border-radius:50%;margin-left:5px; }
+    .button-l { background:#ff5f56; }
+    .button-m { background:#ffbd2e; }
+    .button-r { background:#27c93f; }
+
+    .content { padding: 0 18px 14px 18px; }
+    .content p { margin: 0; }
+
+    /* white-space:pre keeps the alignment of the real command output */
+    .line { display:inline-block;white-space:pre;overflow:hidden;
+            vertical-align:top;line-height:1.5;
+            border-right:0.12em solid transparent; }
+    .out  { opacity: 0; }
+
+    /* syntax colours, matching the website scheme */
+    .pr   { color:#27c93f; }
+    .sh   { color:#7e869c; }
+    .cmd  { color:#ffffff; }
+    .mut  { color:#8b93a7; }
+    .ok   { color:#2fb170; }
+    .path { color:#447bdd; }
+    .num  { color:#e15a46; }
+
+    @keyframes cursor { 0%,49%{border-right-color:transparent;}
+                        50%,100%{border-right-color:#d4d4d4;} }
+    @keyframes fade { from{opacity:0;} to{opacity:1;} }
+
+    /* one keyframe set per typed line: the width must match its length in ch */
+    @keyframes type-l01{from{width:0ch;}to{width:13ch;}}
+    @keyframes type-l06{from{width:0ch;}to{width:32ch;}}
+    .l01{width:0;animation:type-l01 0.71s 0.0s steps(13,end) forwards,cursor 0.71s linear 0.0s 1;}
+    .l02{animation:fade 0.28s 0.81s ease forwards;}
+    .l03{animation:fade 0.28s 0.97s ease forwards;}
+    .l04{animation:fade 0.28s 1.13s ease forwards;}
+    .l06{width:0;animation:type-l06 1.76s 1.74s steps(32,end) forwards,cursor 1.76s linear 1.74s 1;}
+    .l07{animation:fade 0.28s 3.6s ease forwards;}
+    .l08{animation:fade 0.28s 3.76s ease forwards;}
+    .l09{animation:fade 0.28s 3.92s ease forwards;}
+  </style>
+
+  <foreignObject x="0" y="0" width="100%" height="100%">
+    <body xmlns="http://www.w3.org/1999/xhtml">
+      <div class="container">
+        <div class="top">
+          <span class="button-l"></span>
+          <span class="button-m"></span>
+          <span class="button-r"></span>
+        </div>
+        <div class="content">
+          <p>
+            <span class="line typed l01"><span class="pr">$ </span><span class="cmd">nix develop</span></span><br/>
+            <span class="line out l02"><span class="mut">Creating virtualenv in ./.venv ...</span></span><br/>
+            <span class="line out l03"><span class="mut">Installing Python requirements ...</span></span><br/>
+            <span class="line out l04"><span class="ok">Environment ready:  make reproduce  &amp;&amp;  make</span></span><br/>
+            <br/>
+            <span class="line typed l06"><span class="sh">bash-5.2$ </span><span class="cmd">make reproduce &amp;&amp; make</span></span><br/>
+            <span class="line out l07"><span class="mut">  wrote </span><span class="path">build/results/example_zne.csv</span><span class="mut">  (150 rows)</span></span><br/>
+            <span class="line out l08"><span class="ok">Reproduction up to date!</span></span><br/>
+            <span class="line out l09"><span class="mut">Output written on </span><span class="path">build/paper/paper_template.pdf</span><span class="mut"> (1 page)</span></span><br/>
+          </p>
+        </div>
+      </div>
+    </body>
+  </foreignObject>
+</svg>

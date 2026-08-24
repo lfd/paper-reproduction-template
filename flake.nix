@@ -66,7 +66,7 @@
           shellHook = ''
             export VENV="$PWD/.venv"
             if [ ! -d "$VENV" ]; then
-              echo "Creating virtualenv in $VENV ..."
+              echo "Creating virtualenv in ./.venv ..."
               python -m venv "$VENV"
             fi
             source "$VENV/bin/activate"
