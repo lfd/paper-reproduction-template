@@ -1,0 +1,72 @@
+cff-version: 1.2.0
+title: Paper Reproduction Template
+message: >-
+  If you use this template, please cite the paper it accompanies
+  (see preferred-citation below).
+type: software
+authors:
+  - given-names: Dominik
+    family-names: Köster
+    email: dominik.koester@oth-regensburg.de
+    orcid: 'https://orcid.org/0009-0001-0230-3123'
+    affiliation: >-
+      Technical University of Applied Sciences Regensburg (OTH Regensburg)
+license: MIT
+repository-code: 'https://github.com/YOUR-ORG/paper-reproduction-template'
+abstract: >-
+  A self-contained project template for reproducible papers: a Makefile-driven
+  pipeline from experiment scripts through generated data and figures to a
+  camera-ready IEEEtran PDF, with three levels of environment pinning
+  (requirements.txt, Docker, Nix) and a reference-result check.
+keywords:
+  - reproducibility
+  - reproduction package
+  - research software
+  - quantum computing
+  - LaTeX
+
+# The template is a contribution of the paper below; cite the paper rather
+# than the repository.
+preferred-citation:
+  type: conference-paper
+  title: 'Works on My QPU: Reproducibility in Quantum Computing Research'
+  authors:
+    - given-names: Dominik
+      family-names: Köster
+      orcid: 'https://orcid.org/0009-0001-0230-3123'
+      affiliation: >-
+        Technical University of Applied Sciences Regensburg (OTH Regensburg)
+    - given-names: Maja
+      family-names: Franz
+      orcid: 'https://orcid.org/0000-0002-2801-7192'
+      affiliation: >-
+        Technical University of Applied Sciences Regensburg (OTH Regensburg)
+    - given-names: Benjamin
+      family-names: Zec
+      orcid: 'https://orcid.org/0009-0009-9865-8217'
+      affiliation: >-
+        Technical University of Applied Sciences Regensburg (OTH Regensburg)
+    - given-names: Nicole
+      family-names: Hoess
+      orcid: 'https://orcid.org/0009-0002-6194-5887'
+      affiliation: >-
+        Technical University of Applied Sciences Regensburg (OTH Regensburg)
+    - given-names: Ralf
+      family-names: Ramsauer
+      orcid: 'https://orcid.org/0009-0007-4033-8515'
+      affiliation: >-
+        Technical University of Applied Sciences Regensburg (OTH Regensburg)
+    - given-names: Wolfgang
+      family-names: Mauerer
+      orcid: 'https://orcid.org/0000-0002-9765-8313'
+      affiliation: >-
+        Technical University of Applied Sciences Regensburg (OTH Regensburg);
+        Siemens AG, Foundational Technology, Munich, Germany
+  collection-title: >-
+    IEEE International Conference on Quantum Computing and Engineering (QCE)
+  year: 2026
+  url: 'https://arxiv.org/abs/2607.08348'
+  identifiers:
+    - type: other
+      value: 'arXiv:2607.08348'
+      description: arXiv preprint
