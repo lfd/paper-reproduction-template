@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="420"
+     viewBox="0 0 780 420" role="img"
+     aria-label="Pipeline of the reproduction template: make reproduce turns the
+       experiment script into CSV results, TikZ figures and figure PDFs; make turns
+       main.tex into the paper PDF; make check compares fresh results with the
+       committed reference results.">
+  <style>
+    .card { fill:#272a35; filter:drop-shadow(4px 5px 18px rgba(0,0,0,.55)); }
+    .t    { font-family:ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace; font-size:11px; fill:#d4d4d4; text-anchor:middle; }
+    .sub  { font-size:9px; fill:#7e869c; }
+    .cap  { font-size:9px; fill:#7e869c; }
+    .tgt  { font-size:12px; fill:#27c93f; text-anchor:start; }
+    .note { font-size:9px; fill:#7e869c; text-anchor:start; }
+
+    /* box flavours: committed source, generated artefact, the paper, reference data */
+    .box     { fill:#2f3341; stroke-width:1.2; }
+    .box.src { stroke:#447bdd; }
+    .box.gen { stroke:#2fb170; }
+    .box.out { stroke:#e15a46; }
+    .box.ref { stroke:#c972c1; }
+    text.src { fill:#8ab4ff; }
+    text.gen { fill:#63d39b; }
+    text.out { fill:#ff8b78; }
+    text.ref { fill:#dfa8db; }
+
+    .arw  { stroke:#7e869c; stroke-width:1.2; }
+    .dash { stroke-dasharray:4 3; }
+    .head { fill:#7e869c; }
+
+    /* each element appears when the pipeline reaches it */
+    .fx { opacity:0; }
+    @keyframes pop { from{opacity:0;transform:translateY(4px);}
+                     to{opacity:1;transform:translateY(0);} }
+    .a1{animation:pop 0.3s 0.0s ease forwards;}
+    .a2{animation:pop 0.3s 0.1s ease forwards;}
+    .a3{animation:pop 0.25s 0.44s ease forwards;}
+    .a4{animation:pop 0.3s 0.62s ease forwards;}
+    .a5{animation:pop 0.25s 0.96s ease forwards;}
+    .a6{animation:pop 0.3s 1.14s ease forwards;}
+    .a7{animation:pop 0.25s 1.48s ease forwards;}
+    .a8{animation:pop 0.3s 1.66s ease forwards;}
+    .a9{animation:pop 0.3s 2.0s ease forwards;}
+    .a10{animation:pop 0.3s 2.1s ease forwards;}
+    .a11{animation:pop 0.25s 2.44s ease forwards;}
+    .a12{animation:pop 0.3s 2.62s ease forwards;}
+    .a13{animation:pop 0.3s 2.96s ease forwards;}
+    .a14{animation:pop 0.3s 3.06s ease forwards;}
+    .a15{animation:pop 0.3s 3.16s ease forwards;}
+    .a16{animation:pop 0.25s 3.5s ease forwards;}
+    .a17{animation:pop 0.3s 3.68s ease forwards;}
+    .a18{animation:pop 0.3s 4.02s ease forwards;}
+  </style>
+
+  <rect class="card" x="20" y="16" width="740"
+        height="388" rx="12"/>
+
+  <g class="fx a1">
+    <text class="t tgt" x="42" y="64">$ make reproduce</text>
+  </g>
+  <g class="fx a9">
+    <text class="t tgt" x="42" y="186">$ make</text>
+  </g>
+  <g class="fx a13">
+    <text class="t note" x="552" y="218">\includetikz uses build/plots/,</text>
+    <text class="t note" x="552" y="232">else plots_precompiled/</text>
+  </g>
+  <g class="fx a14">
+    <text class="t tgt" x="42" y="294">$ make check</text>
+  </g>
+  <g class="fx a3">
+    <line class="arw" x1="166" y1="101" x2="225" y2="101"/>
+    <path class="head" d="M225,97 L232,101 L225,105 Z"/>
+    <text class="t cap" x="199" y="93">simulate</text>
+  </g>
+  <g class="fx a5">
+    <line class="arw" x1="356" y1="101" x2="415" y2="101"/>
+    <path class="head" d="M415,97 L422,101 L415,105 Z"/>
+    <text class="t cap" x="389" y="93">tikzDevice</text>
+  </g>
+  <g class="fx a7">
+    <line class="arw" x1="546" y1="101" x2="605" y2="101"/>
+    <path class="head" d="M605,97 L612,101 L605,105 Z"/>
+    <text class="t cap" x="579" y="93">gen_img.sh</text>
+  </g>
+  <g class="fx a11">
+    <line class="arw" x1="166" y1="223" x2="225" y2="223"/>
+    <path class="head" d="M225,219 L232,223 L225,227 Z"/>
+    <text class="t cap" x="199" y="215">latexmk</text>
+  </g>
+  <g class="fx a16">
+    <line class="arw dash" x1="268" y1="331" x2="352" y2="331"/>
+    <path class="head" d="M275,327 L268,331 L275,335 Z"/>
+    <path class="head" d="M345,327 L352,331 L345,335 Z"/>
+    <text class="t cap" x="310" y="323">equal</text>
+  </g>
+  <g class="fx a2">
+    <rect class="box src" x="42" y="78" width="124" height="46" rx="7"/>
+    <text class="t src" x="104" y="99">example_zne.py</text>
+    <text class="t sub" x="104" y="113">reproduction/scripts</text>
+  </g>
+  <g class="fx a4">
+    <rect class="box gen" x="232" y="78" width="124" height="46" rx="7"/>
+    <text class="t gen" x="294" y="99">example_zne.csv</text>
+    <text class="t sub" x="294" y="113">build/results</text>
+  </g>
+  <g class="fx a6">
+    <rect class="box gen" x="422" y="78" width="124" height="46" rx="7"/>
+    <text class="t gen" x="484" y="99">example_zne.tex</text>
+    <text class="t sub" x="484" y="113">build/plots</text>
+  </g>
+  <g class="fx a8">
+    <rect class="box gen" x="612" y="78" width="124" height="46" rx="7"/>
+    <text class="t gen" x="674" y="99">example_zne.pdf</text>
+    <text class="t sub" x="674" y="113">build/plots</text>
+  </g>
+  <g class="fx a10">
+    <rect class="box src" x="42" y="200" width="124" height="46" rx="7"/>
+    <text class="t src" x="104" y="221">main.tex</text>
+    <text class="t sub" x="104" y="235">paper</text>
+  </g>
+  <g class="fx a12">
+    <rect class="box out" x="232" y="200" width="300" height="46" rx="7"/>
+    <text class="t out" x="382" y="221">paper_template.pdf</text>
+    <text class="t sub" x="382" y="235">build/paper</text>
+  </g>
+  <g class="fx a15">
+    <rect class="box gen" x="42" y="308" width="220" height="46" rx="7"/>
+    <text class="t gen" x="152" y="329">build/results/*.csv</text>
+    <text class="t sub" x="152" y="343">fresh run</text>
+  </g>
+  <g class="fx a17">
+    <rect class="box ref" x="358" y="308" width="260" height="46" rx="7"/>
+    <text class="t ref" x="488" y="329">reproduction/data/reference/*.csv</text>
+    <text class="t sub" x="488" y="343">committed expectation</text>
+  </g>
+
+  <g class="fx a18">
+    <rect class="box src" x="42" y="372" width="10" height="10" rx="2"/>
+    <text class="t note" x="58" y="381">committed</text>
+    <rect class="box gen" x="150" y="372" width="10" height="10" rx="2"/>
+    <text class="t note" x="166" y="381">generated (build/, gitignored)</text>
+    <rect class="box out" x="392" y="372" width="10" height="10" rx="2"/>
+    <text class="t note" x="408" y="381">paper</text>
+    <rect class="box ref" x="466" y="372" width="10" height="10" rx="2"/>
+    <text class="t note" x="482" y="381">reference results</text>
+  </g>
+</svg>

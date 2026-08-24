@@ -4,6 +4,14 @@ A self-contained project template for **reproducible papers**: one repository
 that holds the experiment code, the generated data, the figures and the
 camera-ready PDF, wired together by a single `Makefile`.
 
+<p align="center">
+  <img src=".github/assets/terminal.svg" width="660"
+       alt="Terminal session: `make reproduce` runs the experiment and writes
+            build/results/example_zne.csv and build/plots/example_zne.tex,
+            `make check` reports that all results match the committed reference,
+            and `make` writes build/paper/paper_template.pdf."/>
+</p>
+
 ```bash
 make            # build the paper PDF          → build/paper/paper_template.pdf
 make reproduce  # re-run experiments + figures → build/results, build/plots
@@ -143,12 +151,14 @@ make reproduce && make
 
 ## How the pipeline fits together
 
-```
-reproduction/scripts/*.py   →  build/results/*.csv     (data, seeded)
-reproduction/R/plot_*.R     →  build/plots/*.tex       (TikZ fragments)
-reproduction/gen_img.sh     →  build/plots/*.pdf       (standalone figures)
-paper/main.tex              →  build/paper/$(JOB).pdf  (the paper)
-```
+<p align="center">
+  <img src=".github/assets/pipeline.svg" width="780"
+       alt="Pipeline: `make reproduce` turns reproduction/scripts/example_zne.py into
+            build/results/example_zne.csv, then into build/plots/example_zne.tex via R
+            and tikzDevice, then into build/plots/example_zne.pdf via gen_img.sh;
+            `make` turns paper/main.tex into build/paper/paper_template.pdf; `make check`
+            compares the fresh CSVs with reproduction/data/reference/*.csv."/>
+</p>
 
 Two conventions make this robust:
 
