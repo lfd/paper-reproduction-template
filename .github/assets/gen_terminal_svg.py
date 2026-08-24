@@ -20,10 +20,15 @@ PROMPT = "pr"   # green $
 SHELL = "sh"    # prompt of a nested shell (nix develop)
 CMD = "cmd"     # white command
 
-TYPE_SPEED = 0.055      # seconds per character
-OUT_STEP = 0.16         # delay between consecutive output lines
-OUT_FADE = 0.28
-PAUSE_AFTER_OUT = 0.45  # think time before the next command is typed
+# A shared beat grid keeps the three cards in step: every row starts on a beat,
+# a typed command occupies two beats, an output line or a blank one beat.  The
+# cards therefore advance in lockstep for as long as their sessions agree, and
+# they all restart together every CYCLE seconds.
+BEAT = 0.34             # seconds per row
+TYPE_BEATS = 2          # beats a typed command occupies
+TYPE_DUR = 0.6          # typing itself, independent of the command length
+OUT_FADE = 0.26
+CYCLE = 10.0            # loop length; the finished frame is held until then
 
 WIDTH = 660
 MONO = "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace"
@@ -38,22 +43,26 @@ MAKE = [
     ("out",  [("  Wrote ", MUT), ("build/plots/example_zne.tex", PATH)]),
     ("out",  [("Reproduction up to date!", OK)]),
     ("gap",  []),
+    ("type", [("$ ", PROMPT), ("make", CMD)]),
+    ("out",  [("Output written on ", MUT), ("build/paper/paper_template.pdf", PATH), (" (1 page)", MUT)]),
+    ("gap",  []),
     ("type", [("$ ", PROMPT), ("make check", CMD)]),
     ("out",  [("OK", OK), ("    example_zne.csv", MUT)]),
     ("out",  [("OK", OK), ("    example_zne_summary.csv", MUT)]),
     ("out",  [("All results match the committed reference.", OK)]),
-    ("gap",  []),
-    ("type", [("$ ", PROMPT), ("make", CMD)]),
-    ("out",  [("Output written on ", MUT), ("build/paper/paper_template.pdf", PATH), (" (1 page)", MUT)]),
 ]
 
-# No local R or TeX Live needed: everything runs in the pinned image.
+# No local R or TeX Live needed: everything runs in the pinned image.  The row
+# count is chosen so that the closing PDF line lands on the same beat as in the
+# other two sessions.
 DOCKER = [
     ("type", [("$ ", PROMPT), ("make repro_docker", CMD)]),
     ("out",  [("docker compose -f docker/docker-compose.yml build", MUT)]),
     ("out",  [(" Image ", MUT), ("paper_repro", PATH), (" Built", OK)]),
     ("out",  [("docker compose ... run --rm repro", MUT)]),
+    ("out",  [("python3 reproduction/scripts/example_zne.py", MUT)]),
     ("out",  [("  wrote ", MUT), ("build/results/example_zne.csv", PATH), ("  (150 rows)", MUT)]),
+    ("out",  [("  wrote ", MUT), ("build/results/example_zne_summary.csv", PATH), ("  (3 rows)", MUT)]),
     ("out",  [("  Compiling: example_zne.tex ", MUT), ("→", MUT), (" example_zne.pdf", MUT)]),
     ("out",  [("Reproduction up to date!", OK)]),
     ("out",  [("Output written on ", MUT), ("build/paper/paper_template.pdf", PATH), (" (1 page)", MUT)]),
@@ -75,13 +84,21 @@ NIX = [
 GRAPHICS = {"terminal.svg": MAKE, "terminal_docker.svg": DOCKER, "terminal_nix.svg": NIX}
 
 
+def pct(seconds):
+    """Position of *seconds* inside the loop, in percent of the cycle."""
+    return round(min(seconds, CYCLE) / CYCLE * 100, 2)
+
+
 def build(lines):
     """Return (svg, end_of_animation)."""
     keyframes, rules, body = [], [], []
-    t = 0.0
+    beat = 0
+    end = 0.0
     for i, (kind, spans) in enumerate(lines, start=1):
         cls = f"l{i:02d}"
+        start = round(beat * BEAT, 2)
         if kind == "gap":
+            beat += 1
             body.append("<br/>")
             continue
         text = "".join(s for s, _ in spans)
@@ -90,22 +107,32 @@ def build(lines):
         )
         if kind == "type":
             n = len(text)
-            dur = round(n * TYPE_SPEED, 2)
+            p0 = pct(start)
+            p1 = pct(start + TYPE_DUR)
             keyframes.append(
-                f"@keyframes type-{cls}{{from{{width:0ch;}}to{{width:{n}ch;}}}}"
+                f"@keyframes type-{cls}{{"
+                f"0%,{p0}%{{width:0;border-right-color:transparent;}}"
+                f"{p0 + 0.01}%{{border-right-color:#d4d4d4;}}"
+                f"{p1}%{{width:{n}ch;}}"
+                f"{p1 + 0.01}%,100%{{width:{n}ch;border-right-color:transparent;}}}}"
             )
             rules.append(
-                f".{cls}{{width:0;animation:type-{cls} {dur}s {round(t, 2)}s "
-                f"steps({n},end) forwards,cursor {dur}s linear {round(t, 2)}s 1;}}"
+                f".{cls}{{width:0;animation:type-{cls} {CYCLE}s steps({n},end) infinite;}}"
             )
-            t = round(t + dur + 0.1, 2)
+            beat += TYPE_BEATS
+            end = max(end, start + TYPE_DUR)
         else:
-            rules.append(
-                f".{cls}{{animation:fade {OUT_FADE}s {round(t, 2)}s ease forwards;}}"
+            p0 = pct(start)
+            p1 = pct(start + OUT_FADE)
+            keyframes.append(
+                f"@keyframes fade-{cls}{{0%,{p0}%{{opacity:0;}}"
+                f"{p1}%,100%{{opacity:1;}}}}"
             )
-            t = round(t + OUT_STEP, 2)
-            if i < len(lines) and lines[i][0] in ("gap", "type"):
-                t = round(t + PAUSE_AFTER_OUT, 2)
+            rules.append(
+                f".{cls}{{animation:fade-{cls} {CYCLE}s linear infinite;}}"
+            )
+            beat += 1
+            end = max(end, start + OUT_FADE)
         body.append(
             f'<span class="line {"typed" if kind == "type" else "out"} {cls}">'
             f'{inner}</span><br/>'
@@ -157,11 +184,10 @@ def build(lines):
     .path {{ color:#447bdd; }}
     .num  {{ color:#e15a46; }}
 
-    @keyframes cursor {{ 0%,49%{{border-right-color:transparent;}}
-                        50%,100%{{border-right-color:#d4d4d4;}} }}
-    @keyframes fade {{ from{{opacity:0;}} to{{opacity:1;}} }}
-
-    /* one keyframe set per typed line: the width must match its length in ch */
+    /* One keyframe set per line, expressed in percent of the {CYCLE}s loop:
+       typed lines animate their width in `ch` (hence the generated character
+       counts), output lines fade in.  The finished frame is held until the
+       cycle restarts, so a reader arriving late still sees the session play. */
     {chr(10).join("    " + k for k in keyframes).strip()}
     {chr(10).join("    " + r for r in rules).strip()}
   </style>
@@ -184,7 +210,7 @@ def build(lines):
   </foreignObject>
 </svg>
 '''
-    return svg, t
+    return svg, end
 
 
 here = Path(__file__).resolve().parent

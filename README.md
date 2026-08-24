@@ -55,6 +55,62 @@ and testable from the first commit – replace it with your own experiment.
 
 ## Project layout
 
+```mermaid
+%%{init: {'fontFamily':'ui-monospace,SFMono-Regular,Menlo,Consolas,monospace','themeVariables':{'fontFamily':'ui-monospace,SFMono-Regular,Menlo,Consolas,monospace','fontSize':'14px'},'flowchart':{'wrappingWidth':600,'nodeSpacing':20,'rankSpacing':70,'curve':'basis'}}}%%
+flowchart LR
+    root(["paper-reproduction-template"])
+
+    root --> paper(["paper/ · LaTeX source         ​"])
+    paper --> p1(["main.tex · sections, figures  ​"])
+    paper --> p2(["references.bib                ​"])
+    paper --> p3(["plots_precompiled/ · fallbacks​"])
+    paper --> p4(["IEEEtran.cls · IEEEtran.bst   ​"])
+
+    root --> repro(["reproduction/ · the experiment​"])
+    repro --> r1(["scripts/ · Python, writes CSV ​"])
+    repro --> r2(["R/ · CSV to TikZ figures      ​"])
+    repro --> r3(["core/ · shared library        ​"])
+    repro --> r4(["hardware/ · QPU runs          ​"])
+    repro --> r5(["data/ · static inputs         ​"])
+    r5 --> r6(["reference/ · make check​"])
+    repro --> r7(["requirements.txt · pinned     ​"])
+    repro --> r8([".env.example · credentials    ​"])
+
+    root --> envs(["environment pinning           ​"])
+    envs --> e1(["docker/ · Python + R + TeX    ​"])
+    envs --> e2(["flake.nix · nix develop       ​"])
+    envs --> e3([".github/workflows/ · CI       ​"])
+
+    root --> build(["build/ · generated, gitignored​"])
+    build --> b1(["results/ · CSV data           ​"])
+    build --> b2(["plots/ · TikZ + figure PDFs   ​"])
+    build --> b3(["paper/ · the compiled PDF     ​"])
+
+    classDef rootbox fill:#272a35,stroke:#272a35,color:#d4d4d4
+    classDef srcA fill:#1f5fa8,stroke:#1f5fa8,color:#e8f0ff
+    classDef srcB fill:#8ab4ff,stroke:#8ab4ff,color:#10233d
+    classDef envA fill:#8e4d8a,stroke:#8e4d8a,color:#fbe9f8
+    classDef envB fill:#dfa8db,stroke:#dfa8db,color:#2c1730
+    classDef genA fill:#1f8f5a,stroke:#1f8f5a,color:#d4f7e8
+    classDef genB fill:#58e3a6,stroke:#58e3a6,color:#272a35
+
+    linkStyle default stroke-width:2px
+
+    class root rootbox
+    class paper,repro srcA
+    class p1,p2,p3,p4,r1,r2,r3,r4,r5,r6,r7,r8 srcB
+    class envs envA
+    class e1,e2,e3 envB
+    class build genA
+    class b1,b2,b3 genB
+```
+
+Blue is committed source, purple pins the environment, green is generated and
+safe to delete. `build/` is the only branch that `make clean` removes.
+
+<details>
+<summary>The same layout as a file tree</summary>
+
 ```
 paper/                  LaTeX source (IEEEtran, lualatex)
   main.tex              Paper source – title, authors, sections
@@ -84,6 +140,8 @@ build/                  All generated files – gitignored, safe to delete
   results/              Generated CSV data
 ```
 
+</details>
+
 ---
 
 ## Quick start
@@ -99,8 +157,8 @@ build/                  All generated files – gitignored, safe to delete
 </p>
 
 ```bash
-make            # build the paper PDF          → build/paper/paper_template.pdf
 make reproduce  # re-run experiments + figures → build/results, build/plots
+make            # build the paper PDF          → build/paper/paper_template.pdf
 make check      # do the fresh results match the committed reference?
 ```
 

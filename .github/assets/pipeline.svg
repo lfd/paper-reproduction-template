@@ -29,26 +29,30 @@
 
     /* each element appears when the pipeline reaches it */
     .fx { opacity:0; }
-    @keyframes pop { from{opacity:0;transform:translateY(4px);}
-                     to{opacity:1;transform:translateY(0);} }
-    .a1{animation:pop 0.3s 0.0s ease forwards;}
-    .a2{animation:pop 0.3s 0.1s ease forwards;}
-    .a3{animation:pop 0.25s 0.44s ease forwards;}
-    .a4{animation:pop 0.3s 0.62s ease forwards;}
-    .a5{animation:pop 0.25s 0.96s ease forwards;}
-    .a6{animation:pop 0.3s 1.14s ease forwards;}
-    .a7{animation:pop 0.25s 1.48s ease forwards;}
-    .a8{animation:pop 0.3s 1.66s ease forwards;}
-    .a9{animation:pop 0.3s 2.0s ease forwards;}
-    .a10{animation:pop 0.3s 2.1s ease forwards;}
-    .a11{animation:pop 0.25s 2.44s ease forwards;}
-    .a12{animation:pop 0.3s 2.62s ease forwards;}
-    .a13{animation:pop 0.3s 2.96s ease forwards;}
-    .a14{animation:pop 0.3s 3.06s ease forwards;}
-    .a15{animation:pop 0.3s 3.16s ease forwards;}
-    .a16{animation:pop 0.25s 3.5s ease forwards;}
-    .a17{animation:pop 0.3s 3.68s ease forwards;}
-    .a18{animation:pop 0.3s 4.02s ease forwards;}
+    /* 3% of the 10s cycle is the fade-in, the rest holds the finished
+       diagram, so the whole pipeline replays every 10 seconds.
+       Opacity only: animating `transform` pushes the group onto the
+       compositor, where it renders inconsistently once the SVG is embedded
+       as an image. */
+    @keyframes pop { 0%{opacity:0;} 3%,100%{opacity:1;} }
+    .a1{animation:pop 10.0s 0.0s ease infinite;}
+    .a2{animation:pop 10.0s 0.1s ease infinite;}
+    .a3{animation:pop 10.0s 0.44s ease infinite;}
+    .a4{animation:pop 10.0s 0.62s ease infinite;}
+    .a5{animation:pop 10.0s 0.96s ease infinite;}
+    .a6{animation:pop 10.0s 1.14s ease infinite;}
+    .a7{animation:pop 10.0s 1.48s ease infinite;}
+    .a8{animation:pop 10.0s 1.66s ease infinite;}
+    .a9{animation:pop 10.0s 2.0s ease infinite;}
+    .a10{animation:pop 10.0s 2.1s ease infinite;}
+    .a11{animation:pop 10.0s 2.44s ease infinite;}
+    .a12{animation:pop 10.0s 2.62s ease infinite;}
+    .a13{animation:pop 10.0s 2.96s ease infinite;}
+    .a14{animation:pop 10.0s 3.06s ease infinite;}
+    .a15{animation:pop 10.0s 3.16s ease infinite;}
+    .a16{animation:pop 10.0s 3.5s ease infinite;}
+    .a17{animation:pop 10.0s 3.68s ease infinite;}
+    .a18{animation:pop 10.0s 4.02s ease infinite;}
   </style>
 
   <rect class="card" x="20" y="16" width="740"

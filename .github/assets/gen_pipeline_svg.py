@@ -15,6 +15,7 @@ MONO = "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monos
 
 SRC, GEN, OUT, REF = "src", "gen", "out", "ref"
 BOX_H = 46
+CYCLE = 10.0   # loop length, matching gen_terminal_svg.py
 
 parts = {"labels": [], "arrows": [], "nodes": []}
 anims = []
@@ -29,8 +30,12 @@ def tick(inc):
 
 
 def anim(dur, delay):
+    """Loop on the same CYCLE as the terminal cards, so all graphics on the
+    page restart together; `dur` only sets how fast a single element appears."""
     uid[0] += 1
-    anims.append(f".a{uid[0]}{{animation:pop {dur}s {delay}s ease forwards;}}")
+    anims.append(
+        f".a{uid[0]}{{animation:pop {CYCLE}s {delay}s ease infinite;}}"
+    )
     return f"a{uid[0]}"
 
 
@@ -142,8 +147,12 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}"
 
     /* each element appears when the pipeline reaches it */
     .fx {{ opacity:0; }}
-    @keyframes pop {{ from{{opacity:0;transform:translateY(4px);}}
-                     to{{opacity:1;transform:translateY(0);}} }}
+    /* 3% of the {CYCLE:g}s cycle is the fade-in, the rest holds the finished
+       diagram, so the whole pipeline replays every {CYCLE:g} seconds.
+       Opacity only: animating `transform` pushes the group onto the
+       compositor, where it renders inconsistently once the SVG is embedded
+       as an image. */
+    @keyframes pop {{ 0%{{opacity:0;}} 3%,100%{{opacity:1;}} }}
     {chr(10).join("    " + a for a in anims).strip()}
   </style>
 
