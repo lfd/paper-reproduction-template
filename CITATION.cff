@@ -11,6 +11,32 @@ authors:
     orcid: 'https://orcid.org/0009-0001-0230-3123'
     affiliation: >-
       Technical University of Applied Sciences Regensburg (OTH Regensburg)
+  - given-names: Maja
+    family-names: Franz
+    orcid: 'https://orcid.org/0000-0002-2801-7192'
+    affiliation: >-
+      Technical University of Applied Sciences Regensburg (OTH Regensburg)
+  - given-names: Benjamin
+    family-names: Zec
+    orcid: 'https://orcid.org/0009-0009-9865-8217'
+    affiliation: >-
+      Technical University of Applied Sciences Regensburg (OTH Regensburg)
+  - given-names: Nicole
+    family-names: Hoess
+    orcid: 'https://orcid.org/0009-0002-6194-5887'
+    affiliation: >-
+      Technical University of Applied Sciences Regensburg (OTH Regensburg)
+  - given-names: Ralf
+    family-names: Ramsauer
+    orcid: 'https://orcid.org/0009-0007-4033-8515'
+    affiliation: >-
+      Technical University of Applied Sciences Regensburg (OTH Regensburg)
+  - given-names: Wolfgang
+    family-names: Mauerer
+    orcid: 'https://orcid.org/0000-0002-9765-8313'
+    affiliation: >-
+      Technical University of Applied Sciences Regensburg (OTH Regensburg);
+      Siemens AG, Foundational Technology, Munich, Germany
 license: MIT
 repository-code: 'https://github.com/lfd/paper-reproduction-template'
 abstract: >-
