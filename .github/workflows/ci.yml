@@ -1,0 +1,61 @@
+name: reproduce
+
+# The reproduction package is only credible if a machine that is not the
+# author's can run it.  This workflow rebuilds the paper and re-runs the
+# experiment on every push.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  # 1. Experiment + reference check, using the pinned requirements only.
+  results:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install pinned dependencies
+        run: pip install -r reproduction/requirements.txt
+      - name: Run the experiment
+        run: python reproduction/scripts/example_zne.py --outdir build/results
+      - name: Check results against the committed reference
+        run: python reproduction/scripts/check_results.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: results
+          path: build/results/
+
+  # 2. Full pipeline (experiment + R figures + PDF) in the Docker image.
+  # Skipped on pull requests: building the image takes ~20 min.
+  docker:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image
+        run: docker compose -f docker/docker-compose.yml build
+      - name: make reproduce
+        run: docker compose -f docker/docker-compose.yml run --rm repro
+      - name: Compile the paper
+        run: docker compose -f docker/docker-compose.yml run --rm dev make all
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paper
+          path: build/paper/*.pdf
+
+  # 3. Nix environment – exploratory, run on demand (slow: builds TeX Live).
+  nix:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: 'experimental-features = nix-command flakes'
+      - name: make reproduce && make
+        run: nix develop --command bash -c 'make reproduce && make'
