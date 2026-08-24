@@ -1,8 +1,12 @@
-# Reproduction package requirements
-# Pin exact versions once the experimental pipeline is finalised.
+# Reproduction package requirements.
+# Pin exact versions once the experimental pipeline is finalised – a floating
+# dependency is the most common reason a package stops reproducing.
 numpy==2.4.4
 pandas==3.0.2
 scipy==1.17.1
+matplotlib==3.11.1        # fallback figures (paper/plots_precompiled/)
+
+# Quantum stack – drop or replace for non-quantum papers.
 qiskit==2.3.1
 qiskit-aer==0.17.2
 qiskit-ibm-runtime==0.46.1

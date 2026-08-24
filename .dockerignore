@@ -1,0 +1,7 @@
+.git
+.venv
+build
+.direnv
+**/__pycache__
+reproduction/.env
+reproduction/logs/*
