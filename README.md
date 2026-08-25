@@ -7,9 +7,9 @@ camera-ready PDF, wired together by a single `Makefile`.
 <p align="center">
   <img src=".github/assets/terminal.svg" width="660"
        alt="Terminal session: `make reproduce` runs the experiment and writes
-            build/results/example_zne.csv and build/plots/example_zne.tex,
-            `make check` reports that all results match the committed reference,
-            and `make` writes build/paper/paper_template.pdf."/>
+            build/results/example_zne.csv and build/plots/example_zne.tex, `make`
+            writes build/paper/paper_template.pdf, and `make check` reports that
+            all results match the committed reference."/>
 </p>
 
 <p align="center">
@@ -28,10 +28,6 @@ recommendations derived there, following the 1-2-3 reproducibility guidelines
 for quantum software experiments ([Mauerer & Scherzinger, SANER 2022](https://doi.org/10.1109/SANER53432.2022.00148)):
 a reader can rebuild the paper with one command, regenerate every number with
 another, and run both inside a pinned environment.
-
-A small worked example (zero-noise extrapolation of a four-qubit circuit under
-depolarising noise) ships with the template so that the pipeline is complete
-and testable from the first commit – replace it with your own experiment.
 
 ---
 
@@ -109,7 +105,7 @@ Blue is committed source, purple pins the environment, green is generated and
 safe to delete. `build/` is the only branch that `make clean` removes.
 
 <details>
-<summary>The same layout as a file tree</summary>
+<summary>The layout as a file tree</summary>
 
 ```
 paper/                  LaTeX source (IEEEtran, lualatex)
@@ -151,9 +147,9 @@ build/                  All generated files – gitignored, safe to delete
 <p align="center">
   <img src=".github/assets/terminal.svg" width="660"
        alt="Terminal session: `make reproduce` runs the experiment and writes
-            build/results/example_zne.csv and build/plots/example_zne.tex,
-            `make check` reports that all results match the committed reference,
-            and `make` writes build/paper/paper_template.pdf."/>
+            build/results/example_zne.csv and build/plots/example_zne.tex, `make`
+            writes build/paper/paper_template.pdf, and `make check` reports that
+            all results match the committed reference."/>
 </p>
 
 ```bash
@@ -179,8 +175,7 @@ Rscript -e "install.packages(
 make
 
 # Regenerate all data and figures from scratch, then rebuild the PDF
-make reproduce
-make
+make reproduce && make
 ```
 
 ### 2 – Docker
@@ -256,7 +251,7 @@ Two conventions make this robust:
 - **Data and figures are separate steps.** Python writes CSV; R reads CSV and
   writes TikZ. Re-plotting never re-runs an experiment, and re-analysis never
   needs a QPU.
-- **Figures degrade gracefully.** `\includetikz` in `paper/main.tex` prefers
+- **Figures can be precompiled.** `\includetikz` in `paper/main.tex` prefers
   `build/plots/<name>.tex` and falls back to `paper/plots_precompiled/<name>.pdf`,
   so the paper compiles for readers who have LaTeX but no R.
 
