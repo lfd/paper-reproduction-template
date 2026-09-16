@@ -15,7 +15,7 @@ MONO = "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monos
 
 SRC, GEN, OUT, REF = "src", "gen", "out", "ref"
 BOX_H = 46
-CYCLE = 15.0   # loop length, matching gen_terminal_svg.py
+CYCLE = 25.0   # loop length, matching gen_terminal_svg.py
 
 parts = {"labels": [], "arrows": [], "nodes": []}
 anims, keyframes = [], []

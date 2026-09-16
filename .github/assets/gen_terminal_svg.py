@@ -28,7 +28,8 @@ BEAT = 0.34             # seconds per row
 TYPE_BEATS = 2          # beats a typed command occupies
 TYPE_DUR = 0.6          # typing itself, independent of the command length
 OUT_FADE = 0.26
-CYCLE = 15.0            # loop length; the finished frame is held until then
+CYCLE = 25.0            # loop length; the finished frame is held until then
+                        # (animations end by ~6s, so ~19s of hold)
 
 WIDTH = 660
 MONO = "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace"
