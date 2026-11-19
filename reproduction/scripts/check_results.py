@@ -26,7 +26,7 @@ different simulator or BLAS version can shift an expectation value in its last
 bits, and where that value feeds a random draw (shot sampling), the drawn
 sample changes discretely – so a failing check across *different* library
 versions is expected and informative, not a bug.  Compare with the pinned
-environment (``requirements.txt``, Docker or Nix) before concluding anything.
+environment (``uv.lock``, Docker or Nix) before concluding anything.
 
 Exit status: 0 if all files match, 1 otherwise.
 """

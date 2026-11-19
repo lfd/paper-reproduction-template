@@ -19,15 +19,15 @@ COMPOSE = docker/docker-compose.yml
 # Pass the host uid/gid through, so the container writes files as the current
 # user instead of the image's built-in uid 1000 (see docker-compose.yml).
 DC      = DOCKER_UID=$(shell id -u) DOCKER_GID=$(shell id -g) docker compose
-# Auto-use ./.venv when it exists *and has the dependencies installed*
-# (create it with: python -m venv .venv &&
-#  .venv/bin/pip install -r reproduction/requirements.txt).
+# Auto-use reproduction/.venv when it exists *and has the dependencies
+# installed* (create it with: uv sync --directory reproduction).
 # The import probe matters inside containers and Nix shells, where a venv
 # built for a different interpreter may be visible but unusable.
 # Override with `make PY=/path/to/python`.
-VENV_PY := $(shell [ -x .venv/bin/python ] && \
-                   .venv/bin/python -c 'import numpy' >/dev/null 2>&1 && \
-                   echo .venv/bin/python)
+VENV     = reproduction/.venv
+VENV_PY := $(shell [ -x $(VENV)/bin/python ] && \
+                   $(VENV)/bin/python -c 'import numpy' >/dev/null 2>&1 && \
+                   echo $(VENV)/bin/python)
 PY      ?= $(if $(VENV_PY),$(VENV_PY),python3)
 R       = R_LIBS_USER=$(HOME)/R/library Rscript
 

@@ -18,9 +18,9 @@ services:
       driver: "none"
     volumes:
       - ..:/workspace
-      # Anonymous volume: keep the host's .venv out of the container, whose
-      # dependencies are installed system-wide by the Dockerfile.
-      - /workspace/.venv
+      # Anonymous volume: keep the host's reproduction/.venv out of the container, whose
+      # dependencies are installed into /opt/venv by the Dockerfile.
+      - /workspace/reproduction/.venv
     working_dir: /workspace
     stdin_open: true
     tty: true
@@ -32,6 +32,6 @@ services:
       HOME: /tmp
     volumes:
       - ..:/workspace
-      - /workspace/.venv
+      - /workspace/reproduction/.venv
     working_dir: /workspace
     command: make reproduce
