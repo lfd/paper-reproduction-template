@@ -10,21 +10,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  # 1. Experiment + reference check, using the pinned requirements only.
+  # 1. Experiment + reference check, using the locked Python environment only.
   results:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      # Python version (requires-python) and packages both come from
+      # reproduction/pyproject.toml + uv.lock.
+      - uses: astral-sh/setup-uv@v6
         with:
-          python-version: '3.12'
-          cache: pip
-      - name: Install pinned dependencies
-        run: pip install -r reproduction/requirements.txt
+          enable-cache: true
+      - name: Install locked dependencies
+        run: uv sync --locked --directory reproduction
       - name: Run the experiment
-        run: python reproduction/scripts/example_zne.py --outdir build/results
+        run: uv run --project reproduction python reproduction/scripts/example_zne.py --outdir build/results
       - name: Check results against the committed reference
-        run: python reproduction/scripts/check_results.py
+        run: uv run --project reproduction python reproduction/scripts/check_results.py
       - uses: actions/upload-artifact@v4
         with:
           name: results

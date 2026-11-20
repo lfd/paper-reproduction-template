@@ -27,7 +27,7 @@ CHILDREN = [
     ("r3", "repro", "core/ · shared library", "srcB"),
     ("r4", "repro", "hardware/ · QPU runs", "srcB"),
     ("r5", "repro", "data/ · static inputs", "srcB"),
-    ("r7", "repro", "requirements.txt · pinned", "srcB"),
+    ("r7", "repro", "pyproject.toml · uv.lock", "srcB"),
     ("r8", "repro", ".env.example · credentials", "srcB"),
     ("e1", "envs", "docker/ · Python + R + TeX", "envB"),
     ("e2", "envs", "flake.nix · nix develop", "envB"),

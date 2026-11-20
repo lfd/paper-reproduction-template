@@ -33,11 +33,18 @@ RUN mkdir ~/.R && \
 RUN Rscript -e "install.packages(c('tidyverse', 'scales', 'patchwork', 'tikzDevice', 'ggnewscale'), \
     Ncpus=parallel::detectCores(), repos='https://cloud.r-project.org', clean=TRUE)"
 
-# Python dependencies
+# Python dependencies, installed from uv.lock into /opt/venv (first on PATH,
+# so `python3` is the locked environment).  uv uses the image's interpreter.
+COPY --from=ghcr.io/astral-sh/uv:0.13.4 /uv /usr/local/bin/uv
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv \
+    UV_PYTHON_DOWNLOADS=never \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    PATH=/opt/venv/bin:$PATH
 WORKDIR /root
-COPY ./reproduction/requirements.txt .
-RUN pip install --no-cache-dir -r ./requirements.txt && \
-    rm requirements.txt
+COPY ./reproduction/pyproject.toml ./reproduction/uv.lock ./
+RUN uv sync --locked --no-cache && \
+    rm pyproject.toml uv.lock
 
 # Unprivileged user
 RUN useradd -m ${USER} && \

@@ -1,5 +1,6 @@
 .git
 .venv
+reproduction/.venv
 build
 .direnv
 **/__pycache__

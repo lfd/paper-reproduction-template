@@ -1,0 +1,25 @@
+[project]
+name = "paper-reproduction-template"
+version = "0.1.0"
+description = "Reproduction package for a paper: experiments, figures and paper source"
+# Exact minor version: different interpreters install different numpy/scipy/
+# qiskit-aer builds, which can shift results.  uv fetches 3.12 if missing.
+requires-python = "==3.12.*"
+# Pin exact versions once the experimental pipeline is finalised – a floating
+# dependency is the most common reason a package stops reproducing.  uv.lock
+# additionally pins every transitive dependency; commit it.
+dependencies = [
+    "numpy==2.4.4",
+    "pandas==3.0.2",
+    "scipy==1.17.1",
+    "matplotlib==3.11.1",        # fallback figures (paper/plots_precompiled/)
+
+    # Quantum stack – drop or replace for non-quantum papers.
+    "qiskit==2.3.1",
+    "qiskit-aer==0.17.2",
+    "qiskit-ibm-runtime==0.46.1",
+]
+
+[tool.uv]
+# The scripts are run directly, not installed as a package.
+package = false

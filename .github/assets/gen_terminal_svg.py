@@ -72,8 +72,8 @@ DOCKER = [
 # Nix pins the compilers and system libraries as well, not just the packages.
 NIX = [
     ("type", [("$ ", PROMPT), ("nix develop", CMD)]),
-    ("out",  [("Creating virtualenv in ./.venv ...", MUT)]),
-    ("out",  [("Installing Python requirements ...", MUT)]),
+    ("out",  [("Creating virtualenv in reproduction/.venv ...", MUT)]),
+    ("out",  [("Syncing Python packages from uv.lock ...", MUT)]),
     ("out",  [("Environment ready:  make reproduce  &&  make", OK)]),
     ("gap",  []),
     ("type", [("bash-5.2$ ", SHELL), ("make reproduce && make", CMD)]),

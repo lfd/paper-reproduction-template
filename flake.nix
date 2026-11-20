@@ -14,13 +14,11 @@
           config.allowBroken = true;
         };
 
-        # Python: only the interpreter comes from Nix; the paper's pinned
-        # packages are installed into ./.venv from reproduction/requirements.txt
+        # Python: only the interpreter comes from Nix (the minor version must
+        # match requires-python in reproduction/pyproject.toml); the paper's
+        # locked packages are installed into reproduction/.venv from uv.lock
         # by the shellHook below (Nix has no pinned qiskit set).
-        myPython = pkgs.python313.withPackages (p: with p; [
-          pip
-          virtualenv
-        ]);
+        myPython = pkgs.python312;
 
         # R: plotting stack used by reproduction/R/*.R
         myR = pkgs.rWrapper.override {
@@ -57,6 +55,7 @@
             myTex
             myR
             myPython
+            uv
 
             gnumake
             git
@@ -64,16 +63,15 @@
             which
           ];
           shellHook = ''
-            export VENV="$PWD/.venv"
-            if [ ! -d "$VENV" ]; then
-              echo "Creating virtualenv in ./.venv ..."
-              python -m venv "$VENV"
+            # uv must use Nix's interpreter, never download its own.
+            export UV_PYTHON="${myPython}/bin/python3"
+            export UV_PYTHON_DOWNLOADS=never
+            if [ ! -d reproduction/.venv ]; then
+              echo "Creating virtualenv in reproduction/.venv ..."
             fi
-            source "$VENV/bin/activate"
-            if [ -f reproduction/requirements.txt ]; then
-              echo "Installing Python requirements ..."
-              pip install --quiet -r reproduction/requirements.txt
-            fi
+            echo "Syncing Python packages from uv.lock ..."
+            uv sync --locked --quiet --directory reproduction
+            source reproduction/.venv/bin/activate
             export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [
               pkgs.stdenv.cc.cc.lib
               pkgs.zlib

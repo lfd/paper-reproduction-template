@@ -43,7 +43,7 @@ abstract: >-
   A self-contained project template for reproducible papers: a Makefile-driven
   pipeline from experiment scripts through generated data and figures to a
   camera-ready IEEEtran PDF, with three levels of environment pinning
-  (requirements.txt, Docker, Nix) and a reference-result check.
+  (uv.lock, Docker, Nix) and a reference-result check.
 keywords:
   - reproducibility
   - reproduction package
