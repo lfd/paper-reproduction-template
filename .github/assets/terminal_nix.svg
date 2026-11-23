@@ -73,8 +73,8 @@
         <div class="content">
           <p>
             <span class="line typed l01"><span class="pr">$ </span><span class="cmd">nix develop</span></span><br/>
-            <span class="line out l02"><span class="mut">Creating virtualenv in ./.venv ...</span></span><br/>
-            <span class="line out l03"><span class="mut">Installing Python requirements ...</span></span><br/>
+            <span class="line out l02"><span class="mut">Creating virtualenv in reproduction/.venv ...</span></span><br/>
+            <span class="line out l03"><span class="mut">Syncing Python packages from uv.lock ...</span></span><br/>
             <span class="line out l04"><span class="ok">Environment ready:  make reproduce  &amp;&amp;  make</span></span><br/>
             <br/>
             <span class="line typed l06"><span class="sh">bash-5.2$ </span><span class="cmd">make reproduce &amp;&amp; make</span></span><br/>
